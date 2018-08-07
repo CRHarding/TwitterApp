@@ -10,7 +10,7 @@ class TweetsController < ApplicationController
   def show
     @tweet = Tweet.find(params[:id])
     render json: {
-      message: "Got one tweets",
+      message: "Got one tweet",
       tweet: @tweet
     }
   end

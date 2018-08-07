@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     @users = User.all
     render json: {
       message: "Got all users",
-      users: @users
+      users: @users,
     }
   end
 
