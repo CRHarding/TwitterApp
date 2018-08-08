@@ -19,6 +19,20 @@ class UserServices {
     });
   }
 
+  loginUser(user) {
+    return axios({
+      method: 'POST',
+      url: `/api/users`,
+      data: {
+        user: user,
+      },
+    });
+  }
+
+  logoutUser() {
+    return axios.delete(`/users/sign_out`);
+  }
+
   updateUser(user) {
     return axios.put(`/api/users/${user.id}`);
   }
