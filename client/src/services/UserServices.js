@@ -12,7 +12,7 @@ class UserServices {
   createUser(user) {
     return axios({
       method: 'POST',
-      url: `/api/users`,
+      url: `/api/users/sign_up`,
       data: {
         user: user,
       },
@@ -22,7 +22,7 @@ class UserServices {
   loginUser(user) {
     return axios({
       method: 'POST',
-      url: `/api/users`,
+      url: `/api/users/sign_in`,
       data: {
         user: user,
       },

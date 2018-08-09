@@ -1,16 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users,
-             path: '',
-             path_names: {
-               sign_in: 'login',
-               sign_out: 'logout',
-               registration: 'signup'
-             },
-             controllers: {
-               sessions: 'sessions',
-               registrations: 'registrations'
-             }
-
-  resources :tweets, path: "/api/tweets"
-  resources :users, path: "/api/users"
+  scope :api, defaults: {format: :json} do
+    resources :tweets, path: "/tweets"
+    devise_for :users, controllers: {sessions: 'sessions'}
+    devise_scope :user do
+      get 'users/current', to: 'sessions#show'
+    end
+  end
 end
