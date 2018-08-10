@@ -34,7 +34,6 @@ class WriteTweet extends Component {
   }
 
   handleChange = name => e => {
-    console.log(e.target.value);
     if (this.state.tweet_text.length + e.target.value.length > 160) {
       const tweetText = e.target.value.slice(0, 160);
 
@@ -52,6 +51,9 @@ class WriteTweet extends Component {
   onTweetSubmit = e => {
     const tweet = {};
     tweet.tweet_text = this.state.tweet_text;
+    this.setState({
+      tweet_text: '',
+    });
     this.props.composeTweet(tweet);
   };
 

@@ -15,19 +15,39 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 
-const styles = {
+const drawerWidth = 140;
+
+const styles = theme => ({
   root: {
     flexGrow: 1,
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
   },
-  flex: {
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  drawerPaper: {
+    position: 'relative',
+    width: drawerWidth,
+  },
+  content: {
     flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3,
   },
   menuButton: {
     marginLeft: -12,
     marginRight: 20,
   },
-};
+  toolbar: theme.mixins.toolbar,
+});
 
 class App extends Component {
   constructor(props) {
@@ -44,7 +64,10 @@ class App extends Component {
     UserServices.getCurrentUser(token)
       .then(user => {
         user = user.data.user;
+        console.log(user);
         user.token = token;
+        sessionStorage.setItem('jwt', token);
+        sessionStorage.setItem('email', user.email);
         this.setState({
           user: user,
           loggedIn: true,
@@ -74,6 +97,7 @@ class App extends Component {
     user = JSON.parse(user);
     user.token = token;
     sessionStorage.setItem('jwt', token);
+    sessionStorage.setItem('email', user.email);
     this.setState({
       user: user,
       loggedIn: true,
@@ -85,7 +109,7 @@ class App extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="absolute" className={classes.appBar}>
           <Toolbar>
             <IconButton
               className={classes.menuButton}
@@ -106,11 +130,25 @@ class App extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        {this.state.renderLogin ? (
-          <Authentication updateUser={this.updateUser} />
-        ) : (
-          <UserComponent user={this.state.user} />
-        )}
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.toolbar} />
+          <List>Casey</List>
+          <Divider />
+          <List>Casey</List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          {this.state.renderLogin ? (
+            <Authentication updateUser={this.updateUser} />
+          ) : (
+            <UserComponent user={this.state.user} />
+          )}
+        </main>
       </div>
     );
   }

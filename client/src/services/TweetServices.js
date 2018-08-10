@@ -30,6 +30,17 @@ class TweetServices {
       },
     });
   }
+
+  deleteTweet(tweet) {
+    const token = sessionStorage.getItem('jwt');
+    return axios({
+      method: 'DELETE',
+      url: `/api/tweets/${tweet.id}`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  }
 }
 
 export default new TweetServices();

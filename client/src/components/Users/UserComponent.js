@@ -45,10 +45,33 @@ class UserComponent extends Component {
       .catch(e => 'error in compose tweet--->' + e);
   };
 
+  deleteTweet = removeTweet => {
+    TweetServices.deleteTweet(removeTweet)
+      .then(response => {
+        const initialTweets = this.state.tweets;
+        const removedTweets = initialTweets.filter(tweet => {
+          if (tweet.id !== removeTweet.id) {
+            return tweet;
+          }
+        });
+        console.log(removedTweets);
+        this.setState({
+          tweets: removedTweets,
+        });
+      })
+      .catch(e => console.log('error in deleting tweet'));
+  };
+
   renderTweets = () => {
     return this.state.tweets.map((tweet, index) => {
       if (tweet) {
-        return <TweetDetails key={index} tweet={tweet} />;
+        return (
+          <TweetDetails
+            key={index}
+            tweet={tweet}
+            deleteTweet={this.deleteTweet}
+          />
+        );
       } else {
         return null;
       }
@@ -60,9 +83,11 @@ class UserComponent extends Component {
       <div>
         <UserDetails user={this.props.user} />
         <WriteTweet composeTweet={this.composeTweet} />
-        {this.state.tweets.length > 0
-          ? this.renderTweets()
-          : <p>No current tweets! Tweet more to see something!</p>}
+        {this.state.tweets.length > 0 ? (
+          this.renderTweets()
+        ) : (
+          <p>No current tweets! Tweet more to see something!</p>
+        )}
       </div>
     );
   }
