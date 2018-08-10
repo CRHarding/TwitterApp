@@ -7,21 +7,7 @@ class UserComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userDataLoaded: false,
-      users: [],
     };
-  }
-
-  componentDidMount() {
-    UserService.getUserById(1)
-      .then(responseUser => {
-        console.log(responseUser.data);
-        this.setState({
-          userDataLoaded: true,
-          user: responseUser.data,
-        });
-      })
-      .catch(e => console.log(e));
   }
 
   renderUsers(user) {
@@ -33,17 +19,20 @@ class UserComponent extends Component {
   }
 
   renderTweets(user) {
-    return user.tweets.map((tweet, index) => {
-      return <TweetDetails key={index} tweet={tweet} />;
-    });
+    if (user.tweets) {
+      return user.tweets.map((tweet, index) => {
+        return <TweetDetails key={index} tweet={tweet} />;
+      });
+    } else {
+      return <p>No current tweets! Tweet more to see something!</p>
+    }
   }
 
   render() {
-    const user = this.state.user;
     return (
       <div>
-        {this.state.userDataLoaded && this.renderUsers(user)}
-        {this.state.userDataLoaded && this.renderTweets(user)}
+        <UserDetails user={this.props.user} />
+        {this.renderTweets(this.props.user)}
       </div>
     );
   }

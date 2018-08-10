@@ -35,7 +35,7 @@ class App extends Component {
     this.state = {
       user: null,
       loggedIn: false,
-      renderLogin: false,
+      renderLogin: true,
     };
   }
 
@@ -62,6 +62,8 @@ class App extends Component {
   updateUser = user => {
     this.setState({
       user: user,
+      loggedIn: true,
+      renderLogin: false,
     });
   };
 
@@ -90,8 +92,11 @@ class App extends Component {
             </Button>
           </Toolbar>
         </AppBar>
-        <UserComponent user={this.state.user} />
-        {this.state.renderLogin && this.renderLogin()}
+        {this.state.renderLogin ? (
+          this.renderLogin()
+        ) : (
+          <UserComponent user={this.state.user} />
+        )}
       </div>
     );
   }

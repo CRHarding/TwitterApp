@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const UserDetails = props => {
-  const user = props.user;
+  const userObject = JSON.parse(props.user);
+  const email = userObject.user.email;
+
   return (
     <div>
-      <p>{user.email}</p>
+      <p>Welcome {email}</p>
     </div>
   );
 };

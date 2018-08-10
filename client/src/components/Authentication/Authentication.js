@@ -8,9 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   container: {
@@ -50,16 +48,18 @@ class Authentication extends Component {
 
   onAuthSubmit = e => {
     e.preventDefault();
-    console.log(this.state.login);
     if (this.state.login) {
       UserServices.loginUser({
         email: this.state.email,
         password: this.state.password,
       })
         .then(user => {
-          this.props.updateUser(user.data.user);
+          // console.log(user);
+          this.props.updateUser(user.config.data, user.data.token);
         })
-        .catch(e => console.log(e));
+        .catch(e =>
+          this.setState({ errorMessage: 'Incorrect email or password' })
+        );
     } else {
       if (this.state.password !== this.state.repeatPassword) {
         this.setState({
@@ -75,7 +75,12 @@ class Authentication extends Component {
             console.log(user.data.user);
             this.props.updateUser(user.data.user);
           })
-          .catch(e => console.log(e));
+          .catch(e =>
+            this.setState({
+              errorMessage:
+                'There was an error processing your registration, have you already created an account?',
+            })
+          );
       }
     }
   };
@@ -109,44 +114,57 @@ class Authentication extends Component {
         >
           Sign up
         </Button>
-        <form
-          className={classes.container}
-          onChange={this.onChange}
-          onSubmit={this.onSubmit}
-        >
-          <TextField
-            id="email"
-            label="Email"
-            className={classes.textField}
-            value={this.state.email}
-            onChange={this.handleChange('email')}
-            margin="normal"
-          />
-          <TextField
-            id="password-input"
-            label="Password"
-            value={this.state.password}
-            onChange={this.handleChange('password')}
-            className={classes.textField}
-            type="password"
-            margin="normal"
-          />
-          {!this.state.login && (
-            <TextField
-              id="repeat-password-input"
-              label="Repeat Password"
-              value={this.state.repeatPassword}
-              onChange={this.handleChange('repeatPassword')}
-              className={classes.textField}
-              type="password"
-              margin="normal"
-            />
-          )}
-          <br />
-          <Button variant="outlined" color="primary" onClick={this.onAuthSubmit}>
-            {this.state.login ? 'Login' : 'Sign up'}
-          </Button>
-        </form>
+        <Grid container spacing={24}>
+          <form
+            className={classes.container}
+            onChange={this.onChange}
+            onSubmit={this.onSubmit}
+          >
+            <Grid item xs={12}>
+              <TextField
+                id="email"
+                label="Email"
+                className={classes.textField}
+                value={this.state.email}
+                onChange={this.handleChange('email')}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="password-input"
+                label="Password"
+                value={this.state.password}
+                onChange={this.handleChange('password')}
+                className={classes.textField}
+                type="password"
+                margin="normal"
+              />
+            </Grid>
+            {!this.state.login && (
+              <Grid item xs={12}>
+                <TextField
+                  id="repeat-password-input"
+                  label="Repeat Password"
+                  value={this.state.repeatPassword}
+                  onChange={this.handleChange('repeatPassword')}
+                  className={classes.textField}
+                  type="password"
+                  margin="normal"
+                />
+              </Grid>
+            )}
+            <Grid item xs={12}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={this.onAuthSubmit}
+              >
+                {this.state.login ? 'Login' : 'Sign up'}
+              </Button>
+            </Grid>
+          </form>
+        </Grid>
       </div>
     );
   }

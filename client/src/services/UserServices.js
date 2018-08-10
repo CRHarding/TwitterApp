@@ -5,8 +5,8 @@ class UserServices {
     return axios.get('/api/users');
   }
 
-  getUserById(id) {
-    return axios.get(`/api/users/${id}`);
+  getCurrentUser() {
+    return axios.get(`/api/users/current`);
   }
 
   createUser(user) {
