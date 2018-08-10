@@ -1,30 +1,37 @@
 import React, { Component } from 'react';
-import UserService from '../../services/UserServices';
 import UserDetails from './UserDetails';
 import TweetDetails from '../Tweets/TweetDetails';
+import TweetServices from '../../services/TweetServices';
 
 class UserComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      tweets: null,
     };
   }
 
-  renderUsers(user) {
-    return (
-      <div>
-        <UserDetails user={user.user} />
-      </div>
-    );
+  componentDidMount() {
+    console.log(this.props.user);
+    TweetServices.getTweetsByUserId(this.props.user.id, this.props.user.token)
+      .then(tweets => {
+        console.log(tweets);
+        this.setState({ tweets: tweets });
+      })
+      .catch(e => console.log('Error getting user tweets--->' + e));
   }
 
   renderTweets(user) {
     if (user.tweets) {
       return user.tweets.map((tweet, index) => {
-        return <TweetDetails key={index} tweet={tweet} />;
+        if (tweet) {
+          return <TweetDetails key={index} tweet={tweet} />;
+        } else {
+          return null;
+        }
       });
     } else {
-      return <p>No current tweets! Tweet more to see something!</p>
+      return <p>No current tweets! Tweet more to see something!</p>;
     }
   }
 

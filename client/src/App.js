@@ -39,6 +39,22 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    const token = sessionStorage.getItem('jwt');
+    UserServices.getCurrentUser(token)
+      .then(user => {
+        user = user.data.user;
+        user.token = token;
+        console.log(user);
+        this.setState({
+          user: user,
+          loggedIn: true,
+          renderLogin: false,
+        });
+      })
+      .catch(e => console.log('No currently signed in user...'));
+  }
+
   authCheck = () => {
     if (this.state.loggedIn) {
       this.handleLogout();
@@ -51,7 +67,7 @@ class App extends Component {
 
   handleLogout() {
     UserServices.logoutUser()
-      .then(res => console.log('LOGGED OUT SUCCESS'))
+      .then(res => console.log('LOG OUT SUCCESS'))
       .catch(e => console.log('LOGOUT FAILURE'));
   }
 
@@ -59,7 +75,10 @@ class App extends Component {
     return <Authentication updateUser={this.updateUser} />;
   }
 
-  updateUser = user => {
+  updateUser = (user, token) => {
+    user = JSON.parse(user);
+    user.token = token;
+    sessionStorage.setItem('jwt', token);
     this.setState({
       user: user,
       loggedIn: true,

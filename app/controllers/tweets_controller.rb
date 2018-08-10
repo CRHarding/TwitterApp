@@ -9,10 +9,12 @@ class TweetsController < ApplicationController
   end
 
   def show
-    @tweet = Tweet.find(params[:id])
+    @user = User.find(params[:id])
+    p @user.tweets
     render json: {
-      message: "Got one tweet",
-      tweet: @tweet
+      message: "Got one user's tweets",
+      user: @user,
+      tweets: @user.tweets
     }
   end
 

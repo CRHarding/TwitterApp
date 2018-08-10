@@ -5,8 +5,14 @@ class UserServices {
     return axios.get('/api/users');
   }
 
-  getCurrentUser() {
-    return axios.get(`/api/users/current`);
+  getCurrentUser(token) {
+    return axios({
+      method: 'GET',
+      url: `/api/users/current`,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
   }
 
   createUser(user) {
@@ -30,7 +36,7 @@ class UserServices {
   }
 
   logoutUser() {
-    return axios.delete(`/users/sign_out`);
+    return axios.delete(`api/users/sign_out`);
   }
 
   updateUser(user) {

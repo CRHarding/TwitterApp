@@ -5,7 +5,6 @@ import UserServices from '../../services/UserServices';
 
 //material-ui components
 import { withStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -54,7 +53,6 @@ class Authentication extends Component {
         password: this.state.password,
       })
         .then(user => {
-          // console.log(user);
           this.props.updateUser(user.config.data, user.data.token);
         })
         .catch(e =>

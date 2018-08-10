@@ -1,8 +1,7 @@
 import React from 'react';
 
 const UserDetails = props => {
-  const userObject = JSON.parse(props.user);
-  const email = userObject.user.email;
+  const email = props.user.email;
 
   return (
     <div>
