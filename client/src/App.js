@@ -45,7 +45,6 @@ class App extends Component {
       .then(user => {
         user = user.data.user;
         user.token = token;
-        console.log(user);
         this.setState({
           user: user,
           loggedIn: true,
@@ -69,10 +68,6 @@ class App extends Component {
     UserServices.logoutUser()
       .then(res => console.log('LOG OUT SUCCESS'))
       .catch(e => console.log('LOGOUT FAILURE'));
-  }
-
-  renderLogin() {
-    return <Authentication updateUser={this.updateUser} />;
   }
 
   updateUser = (user, token) => {
@@ -112,7 +107,7 @@ class App extends Component {
           </Toolbar>
         </AppBar>
         {this.state.renderLogin ? (
-          this.renderLogin()
+          <Authentication updateUser={this.updateUser} />
         ) : (
           <UserComponent user={this.state.user} />
         )}

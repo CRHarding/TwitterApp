@@ -10,7 +10,6 @@ class TweetsController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    p @user.tweets
     render json: {
       message: "Got one user's tweets",
       user: @user,
@@ -20,9 +19,8 @@ class TweetsController < ApplicationController
 
   def create
     @user = User.find(params[:user_id])
-    p params[:tweet]
     @tweet = @user.tweets.build(tweet_params)
-
+    p tweet_params
     if @user.save
       render json: {
         message: "Saved new tweet",
@@ -62,6 +60,6 @@ class TweetsController < ApplicationController
   private
 
   def tweet_params
-    params.require(:tweet).permit( :tweet_text, :likes, :user_id)
+    params.require(:tweet).permit( :tweet_text, :likes, :user_id, :email)
   end
 end

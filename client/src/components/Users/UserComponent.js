@@ -1,45 +1,68 @@
 import React, { Component } from 'react';
+
+//components
 import UserDetails from './UserDetails';
 import TweetDetails from '../Tweets/TweetDetails';
+import WriteTweet from '../Tweets/WriteTweet';
+
+//axios services
 import TweetServices from '../../services/TweetServices';
 
 class UserComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tweets: null,
+      tweets: [],
     };
   }
 
   componentDidMount() {
-    console.log(this.props.user);
     TweetServices.getTweetsByUserId(this.props.user.id, this.props.user.token)
       .then(tweets => {
-        console.log(tweets);
-        this.setState({ tweets: tweets });
+        let saveTweets = tweets.data.tweets;
+        saveTweets = saveTweets.map(tweet => {
+          tweet.email = tweets.data.user.email;
+          return tweet;
+        });
+        this.setState({ tweets: saveTweets });
       })
       .catch(e => console.log('Error getting user tweets--->' + e));
   }
 
-  renderTweets(user) {
-    if (user.tweets) {
-      return user.tweets.map((tweet, index) => {
-        if (tweet) {
-          return <TweetDetails key={index} tweet={tweet} />;
-        } else {
-          return null;
-        }
-      });
-    } else {
-      return <p>No current tweets! Tweet more to see something!</p>;
-    }
-  }
+  composeTweet = tweet => {
+    TweetServices.createTweet(tweet, this.props.user.id, this.props.user.email)
+      .then(tweet => {
+        let tweetConfig = JSON.parse(tweet.config.data);
+        let tweetData = tweet.data.tweet;
+        tweetData.email = tweetConfig.email;
+
+        let tweets = this.state.tweets;
+        tweets.unshift(tweetData);
+        this.setState({
+          tweets: tweets,
+        });
+      })
+      .catch(e => 'error in compose tweet--->' + e);
+  };
+
+  renderTweets = () => {
+    return this.state.tweets.map((tweet, index) => {
+      if (tweet) {
+        return <TweetDetails key={index} tweet={tweet} />;
+      } else {
+        return null;
+      }
+    });
+  };
 
   render() {
     return (
       <div>
         <UserDetails user={this.props.user} />
-        {this.renderTweets(this.props.user)}
+        <WriteTweet composeTweet={this.composeTweet} />
+        {this.state.tweets.length > 0
+          ? this.renderTweets()
+          : <p>No current tweets! Tweet more to see something!</p>}
       </div>
     );
   }

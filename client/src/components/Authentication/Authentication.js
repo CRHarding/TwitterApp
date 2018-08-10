@@ -76,7 +76,8 @@ class Authentication extends Component {
           .catch(e =>
             this.setState({
               errorMessage:
-                'There was an error processing your registration, have you already created an account?',
+                `There was an error processing your registration,
+                have you already created an account?`,
             })
           );
       }
