@@ -55,7 +55,6 @@ class App extends Component {
     this.state = {
       user: null,
       loggedIn: false,
-      renderLogin: true,
     };
   }
 
@@ -71,7 +70,6 @@ class App extends Component {
         this.setState({
           user: user,
           loggedIn: true,
-          renderLogin: false,
         });
       })
       .catch(e => console.log('No currently signed in user...'));
@@ -80,16 +78,19 @@ class App extends Component {
   authCheck = () => {
     if (this.state.loggedIn) {
       this.handleLogout();
-    } else {
-      this.setState({
-        renderLogin: true,
-      });
     }
   };
 
   handleLogout() {
     UserServices.logoutUser()
-      .then(res => console.log('LOG OUT SUCCESS'))
+      .then(res => {
+        sessionStorage.removeItem('jwt');
+        sessionStorage.removeItem('email');
+        this.setState({
+          user: null,
+          loggedIn: false,
+        });
+      })
       .catch(e => console.log('LOGOUT FAILURE'));
   }
 
@@ -101,7 +102,6 @@ class App extends Component {
     this.setState({
       user: user,
       loggedIn: true,
-      renderLogin: false,
     });
   };
 
@@ -143,10 +143,10 @@ class App extends Component {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
-          {this.state.renderLogin ? (
-            <Authentication updateUser={this.updateUser} />
-          ) : (
+          {this.state.loggedIn ? (
             <UserComponent user={this.state.user} />
+          ) : (
+            <Authentication updateUser={this.updateUser} />
           )}
         </main>
       </div>

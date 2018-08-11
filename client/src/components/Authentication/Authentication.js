@@ -53,6 +53,7 @@ class Authentication extends Component {
         password: this.state.password,
       })
         .then(user => {
+          console.log(user);
           this.props.updateUser(user.config.data, user.data.token);
         })
         .catch(e =>
