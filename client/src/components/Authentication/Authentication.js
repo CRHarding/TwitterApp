@@ -52,9 +52,15 @@ class Authentication extends Component {
         email: this.state.email,
         password: this.state.password,
       })
-        .then(user => {
-          console.log(user);
-          this.props.updateUser(user.config.data, user.data.token);
+        .then(loggedUser => {
+          const token = loggedUser.data.token;
+          const userData = loggedUser.data;
+          UserServices.getCurrentUser(token)
+          .then(user => {
+            userData.id = user.data.user.id;
+            userData.email = user.data.user.email;
+            this.props.updateUser(userData, token);
+          });
         })
         .catch(e =>
           this.setState({ errorMessage: 'Incorrect email or password' })

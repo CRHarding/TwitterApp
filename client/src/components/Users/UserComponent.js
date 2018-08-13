@@ -54,7 +54,6 @@ class UserComponent extends Component {
             return tweet;
           }
         });
-        console.log(removedTweets);
         this.setState({
           tweets: removedTweets,
         });

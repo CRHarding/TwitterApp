@@ -95,8 +95,8 @@ class App extends Component {
   }
 
   updateUser = (user, token) => {
-    user = JSON.parse(user);
     user.token = token;
+    console.log(user);
     sessionStorage.setItem('jwt', token);
     sessionStorage.setItem('email', user.email);
     this.setState({
